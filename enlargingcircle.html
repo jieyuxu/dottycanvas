@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<canvas id="slate" width="500" height="500" style="border:1px solid #000000;"></canvas>
+	<br/>
+	<!-- I want to use...: <br/>
+	<button id="circle">circles</button>
+	<button id="rec">rectangles</button>
+	<hr> -->
+	STOP THOSE DOTS: <br/>
+	<button id="rock">stop!!!</button>
+	<button id="go">restart</button>
+	
+	<script>
+		var c = document.getElementById('slate');
+		var ctx = c.getContext("2d");
+		var requestID;
+
+		//=============================FUNCTIONS=============================
+		var clear = function(e){
+			e.preventDefault();
+			ctx.clearRect(0,0,500,500);
+		}
+		var clicked = document.getElementById('rock');
+		var clicked2 = document.getElementById('go');
+
+		var animate = function(){
+			var x = c.width/2;
+			var y =  c.height/2;
+			var radius = 5;
+			var shrink = false;
+
+			ctx.fillStyle = '#'+Math.random().toString(16).substr(-6);
+			var enlargeC = function(){
+					console.log(requestID);
+					ctx.clearRect(0,0,c.width,c.height);
+					ctx.beginPath();
+					ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+					ctx.fill();
+
+					if (radius < 5){
+						shrink = false;
+					}
+
+
+					if (radius*2 >= c.width || radius*2 >= c.height){
+						shrink = true;
+					
+					}
+					
+					if (shrink){
+						radius -= 2;
+					}
+					else 
+						radius += 2;
+
+					requestID = window.requestAnimationFrame(enlargeC);
+			};
+
+			enlargeC();
+		}
+
+		var stopit = function(){
+			console.log(requestID);
+			window.cancelAnimationFrame(requestID);
+			// requestID = null;
+		}
+
+		var gogo = function(){
+			requestID = window.requestAnimationFrame(enlargeC);
+		}
+
+		//=============================LISTENERS=============================	
+		c.addEventListener('click', animate);
+		clicked.addEventListener('click', stopit);
+		clicked2.addEventListener('click', animate);
+	</script>
+
+	</body>
+</html>
